@@ -8,6 +8,7 @@ public class MT10{
     public int maxProfit(int[] prices, int n) {
         return solution1(prices, n);
 //        return solution2(prices, n);
+//        return solution3(prices, n);
     }
 
     /**
@@ -100,5 +101,36 @@ public class MT10{
         }
 
         return sell2;
+    }
+
+    /**
+     * 动态规划: 双向
+     * @param prices
+     * @param n
+     * @return
+     */
+    private int solution3(int[] prices, int n){
+        int[] left = new int[n];
+        int[] right = new int[n];
+        int leftMin = prices[0];
+        int rightMax = prices[n-1];
+        int sum = 0;
+
+        // 左段一次交易最大收益
+        for(int i=1; i<n; i++){
+            leftMin = Math.min(prices[i], leftMin);
+            left[i] = Math.max(prices[i]-leftMin, left[i-1]);
+        }
+        // 右段一次交易最大收益
+        for(int i=n-2 ; i>=0; i--){
+            rightMax = Math.max(prices[i], rightMax);
+            right[i] = Math.max(rightMax-prices[i], right[i+1]);
+        }
+        // 两次交易最大收益
+        for(int i=0 ; i<n; i++){
+            sum = Math.max(sum, left[i]+right[i]);
+        }
+
+        return sum;
     }
 }
